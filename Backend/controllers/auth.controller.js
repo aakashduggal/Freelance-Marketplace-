@@ -1,5 +1,6 @@
 import user from "../Models/user.model.js"
 import bcrypt from "bcryptjs"
+import jwt from 'jsonwebtoken'
 
 export const register = async (req, res) => {
   const { username, email, password, isSeller } = req.body
@@ -37,6 +38,30 @@ export const register = async (req, res) => {
     return res.status(500).send("Internal Server Error")
  }
 
+}
 
+export const login = async (req, res)=>{
+const {username, password} = req.body
+
+try {
+  const findUser = await user.findOne({username})
+  if(!findUser){
+    return res.status(400).send("Authenticate first before login")
+  }
+  
+  const correctPassword = bcrypt.compareSync(password, findUser.password)
+  if(!correctPassword){
+    return res.status(400).send("Please enter correct credentials")
+  }
+  
+  const Token = jwt.sign({id: findUser._id, isSeller: findUser.isSeller}, process.env.JWT_KEY)
+
+  const {password: dbPassword, ...finalUser} = findUser._doc
+  
+  res.cookie("accessToken", Token, {httpOnly: true}).status(200).send({finalUser})
+} catch (error) {
+  console.log(error)
+  res.status(500).send("Interval Server Error")
+}
 
 }

@@ -4,6 +4,7 @@ import DBconnect from './DB/db.js'
 import authRoute from "./routes/auth.route.js"
 
 
+
 dotenv.config()
 
 const app = express()
@@ -14,6 +15,7 @@ DBconnect()
 const PORT = process.env.PORT || 8000
 
 app.use("/api/auth", authRoute)
+
 
 app.listen(PORT, () => {
     console.log(`App is Listening on the PORT http://localhost:${PORT}`)
