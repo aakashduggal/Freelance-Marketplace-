@@ -38,7 +38,7 @@ export const register = async (req, res) => {
     return res.status(200).send("User has been Created successfully")
  } catch (error) {
     console.log(error)
-    return res.status(500).send("Internal Server Error")
+    return res.status(500).send("Internal Server Error", error.message)
  }
 
 }
@@ -64,7 +64,7 @@ try {
   res.cookie("accessToken", Token, {httpOnly: true}).status(200).send({finalUser})
 } catch (error) {
   console.log(error)
-  res.status(500).send("Interval Server Error")
+  res.status(500).send("Internal Server Error", error.message)
 }
 
 }
