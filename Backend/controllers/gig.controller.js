@@ -13,8 +13,8 @@ export const createGig = async (req, res)=>{
 
      return res.status(201).send(newGig)
    } catch (error) {
-     return res.status(500).send("Internal Server Error", error.message)
-   }
+     return res.status(500).send({message: "Internal Server Error", error: error.message})
+  }
 
 }
 
@@ -31,8 +31,8 @@ export const deleteGig = async (req, res)=>{
         await Gig.findByIdAndDelete(req.params.id)
         return res.status(200).send("Gig has been deleted successfully")
     } catch (error) {
-        return res.status(500).send("Internal Server Error", error.message)
-    }
+        return res.status(500).send({message: "Internal Server Error", error: error.message})
+  }
 }
 
 export const getGig = async (req, res)=>{
@@ -43,8 +43,8 @@ export const getGig = async (req, res)=>{
         }
         return res.status(200).send(getGig)
     } catch (error) {
-       return res.status(500).send("Internal Server Error", error.message)        
-    }
+       return res.status(500).send({message: "Internal Server Error", error: error.message})
+  }
 }
 
 export const getGigs = async (req, res)=>{
@@ -64,7 +64,7 @@ export const getGigs = async (req, res)=>{
         const gigs = await Gig.find(filters) 
         return res.status(200).send(gigs)
     } catch (error) {
-     return res.status(500).send("Gigs not Found!", error.message)   
-    }
+     return res.status(500).send({message: "Internal Server Error", error: error.message})
+  }
 
 }

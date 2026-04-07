@@ -22,7 +22,7 @@ try {
     })
     
 } catch (error) {
-    return res.status(500).send("Internal Server Error", error.message)
-}
+    return res.status(500).send({message: "Internal Server Error", error: error.message})
+  }
 
 }
