@@ -6,6 +6,8 @@ import "./DB/redis.js"
 import cookieParser from 'cookie-parser'
 import gigRoute from './routes/gig.route.js'
 import orderRoute from "./routes/order.route.js"
+import conversationRoute from "./routes/conversation.route.js"
+import messageRoute from "./routes/message.route.js"
 
 dotenv.config()
 
@@ -20,6 +22,9 @@ const PORT = process.env.PORT || 8000
 app.use("/api/auth", authRoute)
 app.use("/api/gigs", gigRoute)
 app.use("/api/orders", orderRoute)
+app.use("/api/conversation", conversationRoute)
+app.use("/api/message", messageRoute)
+
 
 app.listen(PORT, () => {
     console.log(`App is Listening on the PORT http://localhost:${PORT}`)
