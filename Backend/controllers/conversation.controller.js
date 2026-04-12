@@ -2,7 +2,7 @@ import Conversation from "../Models/conversation.model.js"
 
 export const createConversation = async (req, res)=>{
     try {
-        const newConversation = await new Conversation({
+        const newConversation = new Conversation({
             id: req.isSeller ? req.id + req.body.to : req.body.to + req.id,
             sellerId: req.isSeller ? req.id : req.body.to,
             buyerId : req.isSeller ? req.body.to : req.id,
@@ -15,16 +15,48 @@ export const createConversation = async (req, res)=>{
     
         return res.status(200).send(convo)
     } catch (error) {
-        if(err.code === 11000) return res.status(403).json("Conversation already exists!"); 
-      return res.status(500).send({ message: "Internal Server Error", error: err.message });
+        if(error.code === 11000) return res.status(403).json("Conversation already exists!"); 
+      return res.status(500).send({ message: "Internal Server Error", error: error.message });
   }
 
 }
 
+export const getConversations = async (req, res)=>{
+   try {
+     const convo = await Conversation.find(
+         req.isSeller ? {sellerId: req.id} : {buyerId: req.id}
+     ).sort({updatedAt: -1})
+ 
+     return res.status(200).send(convo)
+   } catch (err) {
+      return res.status(500).send({ message: "Internal Server Error", error: err.message });
+  }
+}
 
+export const getSingleConversation = async (req, res)=>{
+  try {
+    const convo = await Conversation.findOne({id : req.params.id})
+    if(!convo){
+        return res.status(404).send("Conversation Not Exists")
+    }
+    return res.status(200).send(convo)
+  } catch (error) {
+    return res.status(500).send({message:"Internal Server Error", error: error.message})
+  }
+}
 
-
-
-// export const getConversations = (req, res)=>{
-//     const convo = Conversation.find
-// }
+export const updateConversation = async (req, res)=>{
+  try {
+    const convo = await Conversation.findOneAndUpdate(
+        {id: req.params.id},
+        {$set: { ...(req.isSeller ? { readBySeller: true } : { readByBuyer: true }) }},
+        {new: true}
+    )
+   if(!convo){
+        return res.status(404).send("Conversation Not Exists")
+    }
+    return res.status(200).send(convo)
+  } catch (error) {
+    return res.status(500).send({message:"Internal Server Error", error: error.message})
+  }
+}
