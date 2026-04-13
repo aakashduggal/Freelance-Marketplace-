@@ -29,17 +29,42 @@ const io = new Server(server,{
 // . Online Users Track Karne ka Engine
 let users = []
 
-const addUser = (userID, socketID)=>{
-    !users.some((user)=> user.userID === userID) && users.push({userID, socketID})
+const addUser = (userId, socketId)=>{
+    !users.some((user)=> user.userId === userId) && users.push({userId, socketId})
 }
 
-const removeUser = (socketID)=>{
-   users = users.filter((user)=> user.socketID !== socketID)
+const removeUser = (socketId)=>{
+   users = users.filter((user)=> user.socketId !== socketId)
 }
 
-const getUser = (userID)=>{
-    return users.find((user)=> user.userID === userID)
+const getUser = (userId)=>{
+    return users.find((user)=> user.userId === userId)
 }
+
+io.on("connection", (socket)=>{
+    console.log("A new user is connected", socket.id)
+
+    socket.on("addUser", (userId)=>{
+        addUser(userId, socket.id)
+        io.emit("getUsers", users)
+    })
+
+    socket.on("sendMessage", ({senderId, receiverId, desc})=>{
+      const user = getUser(receiverId)
+      if(user){
+        io.to(user.socketId).emit("getMessage",{
+            senderId,
+            desc
+        })
+      }
+    })
+
+    socket.on("disconnect", ()=>{
+        console.log("User Disconnected")
+        removeUser(socket.id)
+        io.emit("getUsers", users)
+    })
+})
 
 const PORT = process.env.PORT || 8000
 
