@@ -10,6 +10,7 @@ import conversationRoute from "./routes/conversation.route.js"
 import messageRoute from "./routes/message.route.js"
 import http from 'http'
 import { Server } from 'socket.io'
+import reviewRouter from './routes/review.route.js'
 
 dotenv.config()
 
@@ -78,6 +79,7 @@ app.use("/api/gigs", gigRoute)
 app.use("/api/orders", orderRoute)
 app.use("/api/conversation", conversationRoute)
 app.use("/api/message", messageRoute)
+app.use("/api/review", reviewRouter)
 
 server.listen(PORT, () => {
     console.log(`App is Listening on the PORT http://localhost:${PORT}`)
