@@ -1,5 +1,5 @@
 import Gig from "../Models/gig.model.js"
-
+import { elesticClient } from "../utils/elasticsearch.js"
 
 export const createGig = async (req, res)=>{
 
@@ -10,6 +10,17 @@ export const createGig = async (req, res)=>{
  
      const newGig = new Gig({userId: req.id, ...req.body})
      await newGig.save()
+
+     await elesticClient.index({
+       index: 'gigs',
+       id: newGig._id.toString(),
+       body:{
+        title: newGig.title,
+        desc: newGig.desc,
+        cat: newGig.cat,
+        price: newGig.price
+       }
+     })
 
      return res.status(201).send(newGig)
    } catch (error) {
@@ -58,13 +69,27 @@ export const getGigs = async (req, res)=>{
         filters.price = {$gte: req.query.min || 0, $lte: req.query.max || 100000000 }
         
         if(req.query.search){
-        filters.title = {$regex: req.query.search, $options: "i"}
+        const result = await elesticClient.search({
+            index: 'gigs',
+            body:{
+                query:{
+                    match:{
+                        title:{
+                            query: req.query.search,
+                            fuzziness: "AUTO"
+                        }
+                    }
+                }
+            }
+        })
+        const elesticGigs = result.body.hits.hits.map(hit => hit._source)
+        return res.status(200).send(elesticGigs)
         }
 
         const gigs = await Gig.find(filters) 
         return res.status(200).send(gigs)
     } catch (error) {
      return res.status(500).send({message: "Internal Server Error", error: error.message})
-  }
+  } 
 
 }
