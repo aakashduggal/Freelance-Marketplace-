@@ -1,6 +1,7 @@
 import Stripe from 'stripe'
 import Gig from '../Models/gig.model.js'
 import Orders from "../Models/order.model.js"
+import {publishEvent} from "../queue/producer.js"
 
 const stripe = new Stripe(process.env.STRIPE_KEY)
 
@@ -26,6 +27,13 @@ export const intent = async (req, res) => {
 
     await newOrder.save()
 
+    await publishEvent("ORDER_NOTIFICATION", {
+     orderId: newOrder._id,
+     title: newOrder.title,
+     buyer: newOrder.buyerId,
+     status: "Completed"
+    })
+    
     return res.status(200).send({ clientSecret: paymentIntent.client_secret })
 
   } catch (error) {
