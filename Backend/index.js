@@ -12,6 +12,7 @@ import http from 'http'
 import { Server } from 'socket.io'
 import reviewRouter from './routes/review.route.js'
 import {checkElesticConnection} from "./utils/elasticsearch.js"
+import { startConsumer } from "./queue/consumer.js"
 
 dotenv.config()
 
@@ -21,6 +22,7 @@ app.use(cookieParser())
 
 DBconnect()
 checkElesticConnection()
+startConsumer()
 
 const server = http.createServer(app)
 const io = new Server(server, {
