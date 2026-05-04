@@ -1,9 +1,26 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import GigDetail from "./pages/GigDetail"
+import Gigs from "./pages/Gigs"
+import Home from "./pages/Home"
+import Login from "./pages/Login"
+import Register from "./pages/Register"
+import Navbar from "./components/Navbar"
+
 function App() {
   return (
     <>
-      <h1 className="text-4xl text-green-500 font-bold text-center mt-20">
-         FAANG Level Full-Stack Baby! 🚀
-      </h1>
+    <BrowserRouter>
+    <Navbar/>
+    <Routes>
+
+      <Route path="/" element={<Home/>}/>
+      <Route path="/login" element={<Login/>}/>
+      <Route path="/register" element={<Register/>}/>
+      <Route path="gigs" element={<Gigs/>}/>
+      <Route path="gig/:id" element={<GigDetail/>}/>
+
+    </Routes>
+    </BrowserRouter>
     </>
   )
 }
