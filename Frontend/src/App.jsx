@@ -5,6 +5,7 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Navbar from "./components/Navbar"
+import RequireAuth from "./components/RequireAuth"
 
 function App() {
   return (
@@ -14,10 +15,10 @@ function App() {
     <Routes>
 
       <Route path="/" element={<Home/>}/>
-      <Route path="/login" element={<Login/>}/>
+      <Route path="/login" element={  <Login/> }/>
       <Route path="/register" element={<Register/>}/>
-      <Route path="gigs" element={<Gigs/>}/>
-      <Route path="gig/:id" element={<GigDetail/>}/>
+      <Route path="gigs" element={<Gigs/>}/> 
+      <Route path="gig/:id" element={ <RequireAuth> <GigDetail/> </RequireAuth>}/>
 
     </Routes>
     </BrowserRouter>

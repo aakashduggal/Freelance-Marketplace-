@@ -1,7 +1,9 @@
 const GigDetail = ()=>{
-    <>
-    <h1>HI</h1>
-    </>
+    return (
+        <>
+            <h1>GigDetail</h1>
+        </>
+    )
 }
 
 export default GigDetail
