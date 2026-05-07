@@ -1,12 +1,32 @@
 import React from "react";
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 const Navbar = () => {
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
     const currentUser = useSelector((state) => state.user.currentUser)
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+    //creating a reference
+    const menuRef = useRef()
+
+    //Click Outside Logic
+    useEffect(()=>{
+         const handleClickOutside = (event)=>{
+            // checking is Dropdown is open and is user clicked outside
+            if(menuRef.current && !menuRef.current.contains(event.target)){
+                setIsDropdownOpen(false)
+            }
+         }
+
+        //screen per click listener lagaya
+         document.addEventListener('mousedown', handleClickOutside)
+        
+         // Cleanup function (memory leak bachane ke liye)
+         return ()=>{document.removeEventListener('mousedown',handleClickOutside)}
+    },[])
+
     return (
 
         <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
@@ -34,7 +54,7 @@ const Navbar = () => {
                             </>
                         ) : (
                             /* if isLoggedIn true, then User Profile / Avatar dikhao */
-                            <div className="relative">
+                            <div className="relative" ref={menuRef}>
 
                                 {/* Avatar (Clickable) */}
                                 <div
