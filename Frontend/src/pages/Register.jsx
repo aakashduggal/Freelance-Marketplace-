@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import useFetch from '../hooks/useFetch'
 
 
 const Register = () => {
@@ -8,10 +9,26 @@ const Register = () => {
     const [name, setName] = useState("")
     const [role, setRole] = useState("client");
 
+    const { loading, error, sendRequest } = useFetch();
 
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log("Register data:", { name, email, password })
+        const bodyData = {
+            username: name,
+            email: email,
+            password: password,
+            isSeller: role === "freelancer" ? true : false
+        }
+        try {
+            const data = await sendRequest('http://localhost:5000/api/auth/register', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyData)
+            });
+        } catch (error) {
+            console.log("Registeration Failed:", error)
+        }
     }
 
     return (
@@ -20,8 +37,9 @@ const Register = () => {
             {/* Premium Card Container */}
             <div className='w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 p-8'>
 
-                {/* Form */}
-                <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
+            {/* Form */}
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+            <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
 
                     {/* name input*/}
                     <div>
@@ -85,7 +103,7 @@ const Register = () => {
                         type="submit"
                         className='w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5'
                     >
-                        Create Account
+                        {loading ? "Creating..." : "Create Account"}
                     </button>
                 </form>
 

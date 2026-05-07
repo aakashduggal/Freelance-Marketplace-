@@ -1,14 +1,25 @@
 import {useState} from 'react'
 import { Link } from 'react-router-dom'
-
+import useFetch from '../hooks/useFetch'
 
 const Login = () => {
-    const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
-    const handleSubmit = (e) => {
+    const {loading, error, sendRequest} = useFetch()
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log("Login data:", { email, password })
+        try {
+            const data = await sendRequest('http://localhost:5000/api/auth/login',{
+                method: 'POST',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({username, password})
+            })
+            console.log("Login Success", data)
+        } catch (error) {
+            console.log("Login Failed:", error)
+        }
     }
 
     return (
@@ -21,17 +32,18 @@ const Login = () => {
                 <h3 className='text-3xl font-extrabold text-gray-900 mb-6 text-center'>Welcome Back</h3>
                 
                 {/* Form */}
+                {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
                 <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
                     
-                    {/* Email Input */}
+                    {/* Username Input */}
                     <div>
-                        <label className='block text-sm font-medium text-gray-700 mb-1'>Email</label>
+                        <label className='block text-sm font-medium text-gray-700 mb-1'>Username</label>
                         <input 
-                            type="email" 
+                            type="text" 
                             className='w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all'
-                            placeholder='name@company.com'
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)} 
+                            placeholder='johndoe123'
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)} 
                             required
                         />
                     </div>
@@ -54,7 +66,7 @@ const Login = () => {
                         type="submit"
                         className='w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5'
                     >
-                        Login
+                        {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
 
