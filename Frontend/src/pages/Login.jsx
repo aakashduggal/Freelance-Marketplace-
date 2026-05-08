@@ -1,12 +1,19 @@
 import {useState} from 'react'
 import { Link } from 'react-router-dom'
 import useFetch from '../hooks/useFetch'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { loginSuccess } from '../redux/slices/userSlice' 
+
 
 const Login = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
     const {loading, error, sendRequest} = useFetch()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -17,6 +24,11 @@ const Login = () => {
                 body: JSON.stringify({username, password})
             })
             console.log("Login Success", data)
+
+            dispatch(loginSuccess(data.finalUser));
+            // Login hote hi user ko Gigs wale page par bhej do
+            navigate('/gigs');
+            
         } catch (error) {
             console.log("Login Failed:", error)
         }

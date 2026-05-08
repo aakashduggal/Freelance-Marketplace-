@@ -7,6 +7,7 @@ import Register from "./pages/Register"
 import Navbar from "./components/Navbar"
 import RequireAuth from "./components/RequireAuth"
 
+
 function App() {
   return (
     <>
@@ -19,7 +20,7 @@ function App() {
       <Route path="/register" element={<Register/>}/>
       <Route path="gigs" element={<Gigs/>}/> 
       <Route path="gig/:id" element={ <RequireAuth> <GigDetail/> </RequireAuth>}/>
-
+      
     </Routes>
     </BrowserRouter>
     </>
