@@ -12,10 +12,19 @@ const sendRequest = async (url, options)=>{
 
   try {
     const response = await fetch(url, options)
-    const data = await response.json()
+    
+    // Check if the response is JSON or Plain Text
+    const contentType = response.headers.get("content-type");
+    let data;
+    if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+    } else {
+        data = await response.text();
+    }
 
     if(!response.ok){
-        throw new Error("Failed to Fetch Data")
+        // If it's a JSON error, it might have data.message. If it's text, it's just data.
+        throw new Error(data.message || data || "Failed to Fetch Data")
     }
 
     setLoading(false)

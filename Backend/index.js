@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import DBconnect from './DB/db.js'
 import authRoute from "./routes/auth.route.js"
@@ -17,6 +18,7 @@ import { startConsumer } from "./queue/consumer.js"
 dotenv.config()
 
 const app = express()
+app.use(cors({ origin: "http://localhost:5173", credentials: true }))
 app.use(express.json()) 
 app.use(cookieParser())
 
@@ -27,7 +29,7 @@ startConsumer()
 const server = http.createServer(app)
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: "http://localhost:5173"
     }
 })
 
