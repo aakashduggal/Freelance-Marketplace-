@@ -6,6 +6,7 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Navbar from "./components/Navbar"
 import RequireAuth from "./components/RequireAuth"
+import AddGig from "./pages/AddGig"
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <Route path="/register" element={<Register/>}/>
       <Route path="gigs" element={<Gigs/>}/> 
       <Route path="gig/:id" element={ <RequireAuth> <GigDetail/> </RequireAuth>}/>
+      <Route path="/add" element={ <RequireAuth> <AddGig/> </RequireAuth>}/>
       
     </Routes>
     </BrowserRouter>
