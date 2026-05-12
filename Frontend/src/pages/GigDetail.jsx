@@ -66,9 +66,11 @@ const GigDetail = () => {
                             </div>
                         ))}
                     </div>
-                    <button className="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors">
-                        Continue (₹{gig.price})
-                    </button>
+                    <Link to={`/pay/${id}`}>
+                        <button className="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors">
+                            Continue (₹{gig.price})
+                        </button>
+                    </Link>
                 </div>
             </div>
         </div>

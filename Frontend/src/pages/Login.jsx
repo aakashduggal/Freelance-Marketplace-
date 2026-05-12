@@ -24,7 +24,7 @@ const Login = () => {
                 body: JSON.stringify({username, password})
             })
             console.log("Login Success", data)
-
+            localStorage.setItem("currentUser", JSON.stringify(data.finalUser));
             dispatch(loginSuccess(data.finalUser));
             // Login hote hi user ko Gigs wale page par bhej do
             navigate('/gigs');
