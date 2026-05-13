@@ -53,17 +53,23 @@ export default function CheckoutForm() {
 
     setIsLoading(true);
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        // Make sure to change this to your Node.js server endpoint
-        return_url: "http://localhost:5173/success",
-      },
-    });
+    try {
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          // Make sure to change this to your Node.js server endpoint
+          return_url: "http://localhost:5173/success",
+        },
+      });
 
-    if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message);
-    } else {
+      if (error) {
+        if (error.type === "card_error" || error.type === "validation_error") {
+          setMessage(error.message);
+        } else {
+          setMessage(error.message || "An unexpected error occurred.");
+        }
+      }
+    } catch (err) {
       setMessage("An unexpected error occurred.");
     }
 

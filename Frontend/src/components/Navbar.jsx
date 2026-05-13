@@ -1,12 +1,21 @@
-import React from "react";
-import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
-import { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom"
+import { useSelector, useDispatch } from "react-redux"
+import { logout } from "../redux/slices/userSlice"
 
 const Navbar = () => {
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
     const currentUser = useSelector((state) => state.user.currentUser)
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const handleLogout = () => {
+        localStorage.removeItem("currentUser");
+        dispatch(logout());
+        setIsDropdownOpen(false);
+        navigate("/login");
+    }
 
     //creating a reference
     const menuRef = useRef()
@@ -73,7 +82,7 @@ const Navbar = () => {
                                         <Link to="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">Dashboard</Link>
                                         <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">Profile</Link>
                                         <div className="border-t border-gray-100 my-1"></div>
-                                        <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">Logout</button>
+                                        <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">Logout</button>
                                     </div>
                                 )}
 

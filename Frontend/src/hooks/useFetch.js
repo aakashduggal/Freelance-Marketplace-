@@ -1,17 +1,21 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 const useFetch = ()=>{
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
-const sendRequest = async (url, options)=>{
+const sendRequest = useCallback(async (url, options)=>{
 
   setLoading(true)
   setError(null)
 
   try {
-    const response = await fetch(url, options)
+    const finalOptions = {
+        ...options,
+        credentials: "include"
+    };
+    const response = await fetch(url, finalOptions)
     
     // Check if the response is JSON or Plain Text
     const contentType = response.headers.get("content-type");
@@ -36,7 +40,7 @@ const sendRequest = async (url, options)=>{
 
     throw error
   }
-}
+}, [])
 
   return {loading, error, sendRequest}
 }

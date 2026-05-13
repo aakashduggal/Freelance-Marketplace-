@@ -17,18 +17,21 @@ const Success = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ payment_intent })
         });
-        
-        setTimeout(() => {
-          navigate("/orders");
-        }, 5000);
       } catch (error) {
-        console.error(error);
+        console.error("Order confirmation failed:", error);
       }
     };
 
     if(payment_intent) {
         makeRequest();
     }
+
+    // Always redirect after 5 seconds, even if payment intent is missing or API fails
+    const timer = setTimeout(() => {
+        navigate("/gigs");
+    }, 5000);
+
+    return () => clearTimeout(timer);
   }, [payment_intent, navigate, sendRequest]);
 
   return (

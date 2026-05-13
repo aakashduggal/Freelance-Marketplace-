@@ -20,25 +20,27 @@ export const startConsumer = async ()=>{
         });
 
         await subscriber.subscribe("ORDER_NOTIFICATION", async (message)=>{
-          const data = JSON.parse(message)
+            try {
+                const data = JSON.parse(message)
 
-            const mailOptions = {
-                from: '"Fiverr Bot" <bot@fiverrclone.com>',
-                to: "buyer@dummymail.com", // Asli app me 'data.buyerId' ka use krke email mngvayenge DB se
-                subject: `Congratulation! Your Order Placed: ${data.title} `, 
-                text: `Hello Buyer!\n\nYour Order for "${data.title}" (Order ID: ${data.orderId}) has been successfully sent to the seller.\n\nThank you for choosing FiverrClone!`
-            };
-            
-            // Asli email sender chal pada
-            let info = await transporter.sendMail(mailOptions);
+                const mailOptions = {
+                    from: '"Fiverr Bot" <bot@fiverrclone.com>',
+                    to: "buyer@dummymail.com", // Asli app me 'data.buyerId' ka use krke email mngvayenge DB se
+                    subject: `Congratulation! Your Order Placed: ${data.title} `, 
+                    text: `Hello Buyer!\n\nYour Order for "${data.title}" (Order ID: ${data.orderId}) has been successfully sent to the seller.\n\nThank you for choosing FiverrClone!`
+                };
+                
+                // Asli email sender chal pada
+                let info = await transporter.sendMail(mailOptions);
 
-          
-          console.log("Background machine sent the mail! ASYNC WORKER FIRED!");
-          console.log(`Order ID: ${data.orderId}`);
-          console.log(`Congratulations for Gig: ${data.title}`);
-          console.log("Preview URL: ", nodemailer.getTestMessageUrl(info));
-          console.log("Uper diye gaye Preview URL Link ko copy kar ke Browser me khol k dkh asli Inbox me mail dikhega!!");
-          
+                console.log("Background machine sent the mail! ASYNC WORKER FIRED!");
+                console.log(`Order ID: ${data.orderId}`);
+                console.log(`Congratulations for Gig: ${data.title}`);
+                console.log("Preview URL: ", nodemailer.getTestMessageUrl(info));
+                console.log("Uper diye gaye Preview URL Link ko copy kar ke Browser me khol k dkh asli Inbox me mail dikhega!!");
+            } catch (err) {
+                console.error("Error processing order notification:", err.message);
+            }
         })
    console.log("Consumer listening continously with fake Mails");
     } catch (error) {

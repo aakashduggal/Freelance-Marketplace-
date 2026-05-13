@@ -12,14 +12,14 @@ import messageRoute from "./routes/message.route.js"
 import http from 'http'
 import { Server } from 'socket.io'
 import reviewRouter from './routes/review.route.js'
-import {checkElesticConnection} from "./utils/elasticsearch.js"
+import { checkElesticConnection } from "./utils/elasticsearch.js"
 import { startConsumer } from "./queue/consumer.js"
 
 dotenv.config()
 
 const app = express()
 app.use(cors({ origin: "http://localhost:5173", credentials: true }))
-app.use(express.json()) 
+app.use(express.json())
 app.use(cookieParser())
 
 DBconnect()

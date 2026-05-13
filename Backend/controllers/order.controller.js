@@ -27,13 +27,6 @@ export const intent = async (req, res) => {
 
     await newOrder.save()
 
-    await publishEvent("ORDER_NOTIFICATION", {
-     orderId: newOrder._id,
-     title: newOrder.title,
-     buyer: newOrder.buyerId,
-     status: "Completed"
-    })
-    
     return res.status(200).send({ clientSecret: paymentIntent.client_secret })
 
   } catch (error) {
@@ -56,10 +49,20 @@ export const getOrders = async (req, res)=>{
 
 export const confirmOrder = async (req, res)=>{
 try {
-  await Orders.findOneAndUpdate(
+  const order = await Orders.findOneAndUpdate(
     {payment_intent: req.body.payment_intent},
-      {$set: {isCompleted: true}}
+      {$set: {isCompleted: true}},
+      {new: true}
   )
+
+  if (order) {
+    await publishEvent("ORDER_NOTIFICATION", {
+     orderId: order._id,
+     title: order.title,
+     buyer: order.buyerId,
+     status: "Completed"
+    })
+  }
 
   return res.status(200).send("Payment Successful")
 
