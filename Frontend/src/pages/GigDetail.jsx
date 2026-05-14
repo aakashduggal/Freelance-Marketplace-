@@ -2,8 +2,14 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import useFetch from '../hooks/useFetch'
 import Reviews from '../components/Reviews'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const GigDetail = () => {
+
+    const navigate = useNavigate()
+
+    const currentUser = useSelector((state) => state.user)
 
     const { id } = useParams();
 
@@ -24,6 +30,33 @@ const GigDetail = () => {
         fetchSingleGig()
     }, [id])
 
+    const handleContact = async () => {
+        if (!currentUser) {
+            return navigate("/login")
+        }
+
+        if (currentUser._id === gig.userId) {
+            return alert("You cannot message yourself")
+        }
+
+        const sellerId = gig.userId
+        const buyerId = currentUser._id
+        const conversationId = sellerId + buyerId
+
+        try {
+            const data = await sendRequest("http://localhost:5000/api/conversation", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ to: gig.userId })
+            })
+            
+                navigate(`/message/${data.id}`)
+            
+        } catch (error) {
+            navigate(`/message/${conversationId}`)
+        }
+    }
+
     // Agar load ho raha hai toh Loading dikhao
     if (loading) return <div className="p-8 text-center text-xl font-semibold">Loading Gig Details...</div>;
     // Agar gig na mile ya error aaye
@@ -41,7 +74,7 @@ const GigDetail = () => {
 
                 <h2 className="text-xl font-bold mb-2">About This Gig</h2>
                 <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{gig.desc}</p>
-                
+
                 {/* Reviews Section */}
                 <Reviews gigId={id} />
             </div>
@@ -71,6 +104,13 @@ const GigDetail = () => {
                             Continue (₹{gig.price})
                         </button>
                     </Link>
+                    <button
+                        onClick={handleContact}
+                        className="w-full bg-white text-black border-2 border-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors mt-3"
+                    >
+                        Contact Seller
+                    </button>
+
                 </div>
             </div>
         </div>

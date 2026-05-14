@@ -9,6 +9,8 @@ import RequireAuth from "./components/RequireAuth"
 import AddGig from "./pages/AddGig"
 import Pay from "./pages/Pay"
 import Success from "./pages/Success"
+import Messages from "./pages/Messages"
+import Message from "./pages/Message"
 
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
       <Route path="/add" element={ <RequireAuth> <AddGig/> </RequireAuth>}/>
       <Route path="/pay/:id" element={ <RequireAuth> <Pay/> </RequireAuth>}/>
       <Route path="/success" element={ <RequireAuth> <Success/> </RequireAuth>}/>
+      <Route path="/messages" element={ <RequireAuth> <Messages/> </RequireAuth>}/>
+      <Route path="/message/:id" element={ <RequireAuth> <Message/> </RequireAuth>}/>
       
     </Routes>
     </BrowserRouter>
