@@ -1,12 +1,16 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import { useSelector } from "react-redux";
 
 const Message = ()=>{
     const {id} = useParams()
+    const { currentUser } = useSelector((state) => state.user)
     const {sendRequest} = useFetch()
     const [messages, setMessages] = useState([])
     const [desc, setDesc] = useState("")
+    const [socket, setSocket] = useState(null)
     
     useEffect(()=>{
       const getMessages = async ()=>{
@@ -21,6 +25,44 @@ const Message = ()=>{
     }
     getMessages()
     },[id])
+
+    useEffect(()=>{
+        // making connection with backend
+        const newSocket = io("http://localhost:5000")
+        setSocket(newSocket)
+
+        // sending Id to backend so that backend can mark us Online
+        if(currentUser){
+            newSocket.emit("addUser", currentUser._id)
+        }
+
+        // terminating connection when page get closed
+        return ()=>{
+           newSocket.disconnect()
+        }
+    },[currentUser])
+
+    useEffect(()=>{
+        //if socket is not ready then return
+        if(!socket) return 
+
+        // when backend send getMessage
+        socket.on("getMessage", (data)=>{
+            // add new message to our list
+            setMessages((prev) => [
+                ...prev, {
+                    userId: data.senderId, // who sent message
+                    desc : data.desc, // what sent
+                    _id: Date.now() // Temporary Id for UI
+
+                }
+            ])
+        })
+        // remove old listener so that user don't receive double msg
+        return ()=>{
+            socket.off("getMessage")
+        }
+    },[socket])
     
 
     const handleSubmit = async (e)=>{
@@ -36,6 +78,17 @@ const Message = ()=>{
             })
             setDesc("")
             setMessages((prev)=> [...prev, res])
+            
+            // fetching id of message receiver
+            const receiverId = currentUser.isSeller ? id.substring(24) : id.substring(0, 24)
+
+            // telling socket to send the message to receiver
+            socket?.emit("sendMessage", {
+              senderId : currentUser._id,
+              receiverId: receiverId,
+              desc: desc 
+            })
+
         } catch (error) {
             console.log(error)
         }
