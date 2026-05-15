@@ -11,16 +11,20 @@ export const createGig = async (req, res)=>{
      const newGig = new Gig({userId: req.id, ...req.body})
      await newGig.save()
 
-     await elesticClient.index({
-       index: 'gigs',
-       id: newGig._id.toString(),
-       body:{
-        title: newGig.title,
-        desc: newGig.desc,
-        cat: newGig.cat,
-        price: newGig.price
-       }
-     })
+     try {
+       await elesticClient.index({
+         index: 'gigs',
+         id: newGig._id.toString(),
+         body:{
+          title: newGig.title,
+          desc: newGig.desc,
+          cat: newGig.cat,
+          price: newGig.price
+         }
+       })
+     } catch (esError) {
+       console.log("ElasticSearch Indexing failed, but Gig was created. Error:", esError.message)
+     }
 
      return res.status(201).send(newGig)
    } catch (error) {

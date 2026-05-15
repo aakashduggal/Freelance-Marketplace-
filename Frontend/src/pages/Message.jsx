@@ -15,7 +15,7 @@ const Message = ()=>{
     useEffect(()=>{
       const getMessages = async ()=>{
        try {
-         const res = await sendRequest(`http://localhost:5000/api/message/${id}`,{
+         const res = await sendRequest(`http://localhost:5000/api/message/getMessage/${id}`,{
              method: "GET"
          })
          setMessages(res)

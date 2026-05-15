@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useFetch from '../hooks/useFetch'
 
 
 const Register = () => {
+    const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [name, setName] = useState("")
@@ -26,6 +27,9 @@ const Register = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bodyData)
             });
+            // Registration hone ke baad ek alert dikha ke Login page par bhej rahe hain
+            alert("Registration Successful! Please log in.");
+            navigate("/login");
         } catch (error) {
             console.log("Registeration Failed:", error)
         }
