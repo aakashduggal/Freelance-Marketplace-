@@ -15,7 +15,7 @@ const Reviews = ({ gigId }) => {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const data = await sendRequest(`http://localhost:5000/api/review/${gigId}`, {
+                const data = await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/review/${gigId}`, {
                     method: "GET"
                 });
                 if(Array.isArray(data)) {
@@ -35,7 +35,7 @@ const Reviews = ({ gigId }) => {
         setSubmitSuccess(false);
 
         try {
-            const newReview = await sendRequest(`http://localhost:5000/api/review`, {
+            const newReview = await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/review`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ gigId, star: Number(star), desc })

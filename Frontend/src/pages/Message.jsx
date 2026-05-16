@@ -15,7 +15,7 @@ const Message = ()=>{
     useEffect(()=>{
       const getMessages = async ()=>{
        try {
-         const res = await sendRequest(`http://localhost:5000/api/message/getMessage/${id}`,{
+         const res = await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/message/getMessage/${id}`,{
              method: "GET"
          })
          setMessages(res)
@@ -28,7 +28,7 @@ const Message = ()=>{
 
     useEffect(()=>{
         // making connection with backend
-        const newSocket = io("http://localhost:5000")
+        const newSocket = io("https://freelance-marketplace-c0gx.onrender.com")
         setSocket(newSocket)
 
         // sending Id to backend so that backend can mark us Online
@@ -68,7 +68,7 @@ const Message = ()=>{
     const handleSubmit = async (e)=>{
         e.preventDefault()
         try {
-            const res = await sendRequest("http://localhost:5000/api/message",{
+            const res = await sendRequest("https://freelance-marketplace-c0gx.onrender.com/api/message",{
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({

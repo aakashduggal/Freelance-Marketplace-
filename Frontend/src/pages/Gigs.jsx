@@ -29,7 +29,7 @@ const Gigs = () => {
     useEffect(() => {
         const fetchGigs = async () => {
             try {
-                const data = await sendRequest("http://localhost:5000/api/gigs/getGigs", {
+                const data = await sendRequest("https://freelance-marketplace-c0gx.onrender.com/api/gigs/getGigs", {
                     method: "GET"
                 })
 

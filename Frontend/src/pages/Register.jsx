@@ -22,7 +22,7 @@ const Register = () => {
             isSeller: role === "freelancer" ? true : false
         }
         try {
-            const data = await sendRequest('http://localhost:5000/api/auth/register', {
+            const data = await sendRequest('https://freelance-marketplace-c0gx.onrender.com/api/auth/register', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bodyData)

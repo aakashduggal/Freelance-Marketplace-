@@ -19,7 +19,7 @@ const GigDetail = () => {
     useEffect(() => {
         const fetchSingleGig = async () => {
             try {
-                const data = await sendRequest(`http://localhost:5000/api/gigs/getGig/${id}`, {
+                const data = await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/gigs/getGig/${id}`, {
                     method: "GET"
                 })
                 setGig(data)
@@ -44,7 +44,7 @@ const GigDetail = () => {
         const conversationId = sellerId + buyerId
 
         try {
-            const data = await sendRequest("http://localhost:5000/api/conversation", {
+            const data = await sendRequest("https://freelance-marketplace-c0gx.onrender.com/api/conversation", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ to: gig.userId })

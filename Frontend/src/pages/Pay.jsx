@@ -16,7 +16,7 @@ export default function Pay() {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        const data = await sendRequest(`http://localhost:5000/api/orders/create-payment-intent/${id}`, {
+        const data = await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/orders/create-payment-intent/${id}`, {
           method: "POST"
         });
         setClientSecret(data.clientSecret);

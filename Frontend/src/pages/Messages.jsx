@@ -14,7 +14,7 @@ const Messages = () => {
     useEffect(() => {
         const fetchConversations = async () => {
             try {
-                const data = await sendRequest("http://localhost:5000/api/conversation", {
+                const data = await sendRequest("https://freelance-marketplace-c0gx.onrender.com/api/conversation", {
                     method: "GET"
                 })
                 setConversations(data)
@@ -27,7 +27,7 @@ const Messages = () => {
 
     const handleRead = async (id)=>{
         try {
-            await sendRequest(`http://localhost:5000/api/conversation/${id}`,{
+            await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/conversation/${id}`,{
                 method: "PUT"
             })
             navigate(`/message/${id}`)

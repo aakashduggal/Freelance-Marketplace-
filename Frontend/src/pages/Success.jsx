@@ -12,7 +12,7 @@ const Success = () => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        await sendRequest('http://localhost:5000/api/orders', {
+        await sendRequest('https://freelance-marketplace-c0gx.onrender.com/api/orders', {
           method: 'PUT',
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ payment_intent })
