@@ -61,7 +61,11 @@ try {
 
   const {password: dbPassword, ...finalUser} = findUser._doc
   
-  res.cookie("accessToken", Token, {httpOnly: true}).status(200).send({finalUser})
+  res.cookie("accessToken", Token, {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true
+  }).status(200).send({finalUser})
 } catch (error) {
   console.log(error)
  return res.status(500).send({message: "Internal Server Error", error: error.message})
