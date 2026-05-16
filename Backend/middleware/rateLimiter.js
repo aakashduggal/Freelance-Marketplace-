@@ -5,7 +5,7 @@ import redisClient from '../DB/redis.js'
 
 export const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 5,
+    limit: 10,
     standardHeaders: 'draft-7',
     legacyHeaders: false,
     store: new RedisStore({
