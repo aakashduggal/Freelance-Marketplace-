@@ -18,7 +18,15 @@ import { startConsumer } from "./queue/consumer.js"
 dotenv.config()
 
 const app = express()
-app.use(cors({ origin: "http://localhost:5173", credentials: true }))
+
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://freelance-marketplace-omega.vercel.app"
+  ],
+  credentials: true
+}));
+
 app.use(express.json())
 app.use(cookieParser())
 
@@ -29,10 +37,14 @@ startConsumer()
 const server = http.createServer(app)
 const io = new Server(server, {
     cors: {
-        origin: "https://freelance-marketplace-omega.vercel.app",
-
+        origin: [
+            "http://localhost:5173",
+            "https://freelance-marketplace-omega.vercel.app"
+        ],
+        methods: ["GET", "POST"],
+        credentials: true
     }
-})
+});
 
 // . Online Users Track Karne ka Engine
 let users = []
@@ -89,5 +101,5 @@ app.use("/api/message", messageRoute)
 app.use("/api/review", reviewRouter)
 
 server.listen(PORT, () => {
-    console.log(`App is Listening on the PORT "https://freelance-marketplace-omega.vercel.app"`)
+    console.log(`App is listening on PORT ${PORT}`);
 })
