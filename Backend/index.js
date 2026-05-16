@@ -29,7 +29,8 @@ startConsumer()
 const server = http.createServer(app)
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173"
+        origin: "https://freelance-marketplace-omega.vercel.app",
+
     }
 })
 
@@ -88,5 +89,5 @@ app.use("/api/message", messageRoute)
 app.use("/api/review", reviewRouter)
 
 server.listen(PORT, () => {
-    console.log(`App is Listening on the PORT http://localhost:${PORT}`)
+    console.log(`App is Listening on the PORT "https://freelance-marketplace-omega.vercel.app"`)
 })
