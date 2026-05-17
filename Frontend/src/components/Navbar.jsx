@@ -84,6 +84,7 @@ const Navbar = () => {
                                         
                                         {/* Naye Links */}
                                         <Link to="/messages" className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">Messages</Link>
+                                        <Link to="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">Orders</Link>
                                         {currentUser?.isSeller && (
                                             <>
                                                 <Link to="/mygigs" className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">My Gigs</Link>
