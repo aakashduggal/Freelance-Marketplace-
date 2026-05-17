@@ -69,6 +69,10 @@ export const getGigs = async (req, res)=>{
         if(req.query.cat){
             filters.cat = req.query.cat
         }
+
+        if(req.query.userId){
+            filters.userId = req.query.userId
+        }
     
         filters.price = {$gte: req.query.min || 0, $lte: req.query.max || 100000000 }
         

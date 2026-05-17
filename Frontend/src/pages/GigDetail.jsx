@@ -49,9 +49,9 @@ const GigDetail = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ to: gig.userId })
             })
-            
-                navigate(`/message/${data.id}`)
-            
+
+            navigate(`/message/${data.id}`)
+
         } catch (error) {
             navigate(`/message/${conversationId}`)
         }
