@@ -11,6 +11,7 @@ import Pay from "./pages/Pay"
 import Success from "./pages/Success"
 import Messages from "./pages/Messages"
 import Message from "./pages/Message"
+import MyGigs from "./pages/MyGigs"
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
       <Route path="gigs" element={<Gigs/>}/> 
       <Route path="gig/:id" element={ <RequireAuth> <GigDetail/> </RequireAuth>}/>
       <Route path="/add" element={ <RequireAuth> <AddGig/> </RequireAuth>}/>
+      <Route path="/mygigs" element={ <RequireAuth> <MyGigs/> </RequireAuth>}/>
       <Route path="/pay/:id" element={ <RequireAuth> <Pay/> </RequireAuth>}/>
       <Route path="/success" element={ <RequireAuth> <Success/> </RequireAuth>}/>
       <Route path="/messages" element={ <RequireAuth> <Messages/> </RequireAuth>}/>
