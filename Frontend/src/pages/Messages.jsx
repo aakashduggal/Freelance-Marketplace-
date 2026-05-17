@@ -27,8 +27,8 @@ const Messages = () => {
 
     const handleRead = async (id)=>{
         try {
-            await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/conversation/${id}`,{
-                method: "PUT"
+            await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/conversation/update/${id}`,{
+                method: "PATCH"
             })
             navigate(`/message/${id}`)
         } catch (error) {
