@@ -34,7 +34,7 @@ const AddGig = () => {
         e.preventDefault();
         try {
             // Backend pe Gig create karne ki request (POST)
-            const res = await sendRequest("https://freelance-marketplace-c0gx.onrender.com/api/gigs/", {
+            const res = await sendRequest("https://freelance-marketplace-c0gx.onrender.com/api/gigs/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(state) // state me tera poora form ka data hai

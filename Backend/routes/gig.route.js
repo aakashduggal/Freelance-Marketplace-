@@ -5,9 +5,9 @@ import {jwtVerfiy} from '../middleware/jwt.js'
 
 const router = express.Router()
 
-router.post("/", jwtVerfiy, createGig)
-router.delete("/:id", jwtVerfiy, deleteGig)
-router.get("/:id", getGig)
-router.get("/", getGigs)
+router.post("/create", jwtVerfiy, createGig)
+router.delete("/delete/:id", jwtVerfiy, deleteGig)
+router.get("/getGig/:id", getGig)
+router.get("/getGigs", getGigs)
 
 export default router

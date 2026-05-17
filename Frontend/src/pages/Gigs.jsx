@@ -13,7 +13,7 @@ const Gigs = () => {
     const [sortOrder, setSortOrder] = useState("")
 
     const filteredAndSortedGigs = useMemo(() => {
-        let processedGigs = gig.filter((g) => 
+        let processedGigs = gig.filter((g) =>
             g.title.toLowerCase().includes(searchQuery.toLowerCase())
         )
 
