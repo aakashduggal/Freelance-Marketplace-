@@ -48,7 +48,7 @@ const Messages = () => {
                     {/* Table Heading */}
                     <thead className="bg-gray-50 border-b">
                         <tr>
-                            <th className="p-4 font-bold text-gray-700">Buyer / Seller ID</th>
+                            <th className="p-4 font-bold text-gray-700">User</th>
                             <th className="p-4 font-bold text-gray-700">Last Message</th>
                             <th className="p-4 font-bold text-gray-700">Date</th>
                             <th className="p-4 font-bold text-gray-700">Action</th>
@@ -67,9 +67,9 @@ const Messages = () => {
                                     ? "bg-blue-50 font-semibold" : ""
                                 }`}
                             >
-                                {/* Column 1: Dusre bande ki ID */}
-                                <td className="p-4">
-                                    {currentUser.isSeller ? chat.buyerId : chat.sellerId}
+                                {/* Column 1: Username */}
+                                <td className="p-4 font-semibold text-gray-800">
+                                    {currentUser.isSeller ? chat.buyerId?.username : chat.sellerId?.username}
                                 </td>
                                 {/* Column 2: Last message (Click karne se chat khulegi) */}
                                 <td className="p-4 text-gray-600">
