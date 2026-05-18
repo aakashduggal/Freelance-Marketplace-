@@ -13,9 +13,9 @@ const MyGigs = () => {
 
     useEffect(() => {
         const fetchGigs = async () => {
+            if (!currentUser || !currentUser._id) return;
             try {
-                
-                const res = await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/gigs?userId=${currentUser._id}`, {
+                const res = await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/gigs/getGigs?userId=${currentUser._id}`, {
                     method: "GET",
                 });
                 setGigs(res);
