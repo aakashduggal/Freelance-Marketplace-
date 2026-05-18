@@ -11,6 +11,8 @@ const Message = ()=>{
     const [messages, setMessages] = useState([])
     const [desc, setDesc] = useState("")
     const [socket, setSocket] = useState(null)
+    const [convoDetail, setConvoDetail] = useState(null)
+    const [otherUser, setOtherUser] = useState(null)
     
     useEffect(()=>{
       const getMessages = async ()=>{
@@ -23,8 +25,23 @@ const Message = ()=>{
          console.log(error)
        }
     }
+    const getSingleConvo = async ()=>{
+        if (!currentUser) return;
+        try {
+            const singleConvo = await sendRequest(`https://freelance-marketplace-c0gx.onrender.com/api/conversation/single/${id}`,{
+                method: "GET"
+            })
+            setConvoDetail(singleConvo)
+
+            const otherUserObj = currentUser.isSeller ? singleConvo.buyerId : singleConvo.sellerId
+            setOtherUser(otherUserObj)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     getMessages()
-    },[id])
+    getSingleConvo()
+    },[id, currentUser])
 
     useEffect(()=>{
         // making connection with backend
@@ -94,11 +111,55 @@ const Message = ()=>{
         }
     }
 
-    return(
+    return (
         <div className="max-w-4xl mx-auto px-4 py-8 flex flex-col h-[80vh]">
-            <span className="text-gray-500 text-sm mb-4">
-                <Link to="/messages" className="hover:text-black font-semibold">Messages</Link> &gt; Chat
-            </span>
+            {/* Breadcrumbs */}
+            <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 mb-4">
+                <Link to="/messages" className="hover:text-blue-600 transition-colors font-medium">
+                    Messages
+                </Link>
+                <span className="text-gray-300">/</span>
+                <span className="text-gray-700 font-semibold truncate max-w-[200px] md:max-w-none">
+                    {otherUser ? `Chat with ${otherUser.username}` : "Chat"}
+                </span>
+            </div>
+
+            {/* Premium Chat Header */}
+            <div className="flex items-center justify-between bg-white border border-gray-100 rounded-2xl p-4 shadow-sm mb-6 transition-all duration-300 hover:shadow-md">
+                <div className="flex items-center gap-3 md:gap-4">
+                    {/* User Avatar */}
+                    <div className="relative">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-base md:text-lg shadow-inner">
+                            {otherUser ? otherUser.username.charAt(0).toUpperCase() : "?"}
+                        </div>
+                        {/* Pulse active indicator */}
+                        <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 md:h-3.5 md:w-3.5 rounded-full ring-2 ring-white bg-green-500">
+                            <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
+                        </span>
+                    </div>
+                    {/* User Name and Role */}
+                    <div>
+                        <h2 className="text-sm md:text-lg font-bold text-gray-900 flex items-center gap-2">
+                            {otherUser ? otherUser.username : "Loading User..."}
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] md:text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-100">
+                                {otherUser ? (otherUser.isSeller ? "Seller" : "Buyer") : "..."}
+                            </span>
+                        </h2>
+                        <p className="text-[10px] md:text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+                            Active Now
+                        </p>
+                    </div>
+                </div>
+                
+                {/* Back to Messages button */}
+                <Link to="/messages" className="flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 border border-gray-200 rounded-xl text-xs md:text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-black hover:border-gray-300 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span className="hidden sm:inline">All Chats</span>
+                </Link>
+            </div>
             {/* Messages Print honge yahan */}
             <div className="flex-1 bg-gray-50 rounded-lg p-6 overflow-y-auto mb-4 border border-gray-200">
                 {messages.map((m) => (

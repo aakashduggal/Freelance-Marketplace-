@@ -20,11 +20,11 @@ dotenv.config()
 const app = express()
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://freelance-marketplace-omega.vercel.app"
-  ],
-  credentials: true
+    origin: [
+        "http://localhost:5173",
+        "https://freelance-marketplace-omega.vercel.app"
+    ],
+    credentials: true
 }));
 
 app.use(express.json())

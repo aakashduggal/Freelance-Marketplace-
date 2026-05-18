@@ -25,7 +25,10 @@ export const getConversations = async (req, res) => {
   try {
     const convo = await Conversation.find(
       req.isSeller ? { sellerId: req.id } : { buyerId: req.id }
-    ).sort({ updatedAt: -1 })
+    )
+      .populate("sellerId", "username email isSeller")
+      .populate("buyerId", "username email isSeller")
+      .sort({ updatedAt: -1 })
 
     return res.status(200).send(convo)
   } catch (err) {
@@ -36,6 +39,8 @@ export const getConversations = async (req, res) => {
 export const getSingleConversation = async (req, res) => {
   try {
     const convo = await Conversation.findOne({ id: req.params.id })
+      .populate("sellerId", "username email isSeller")
+      .populate("buyerId", "username email isSeller");
     if (!convo) {
       return res.status(404).send("Conversation Not Exists")
     }
