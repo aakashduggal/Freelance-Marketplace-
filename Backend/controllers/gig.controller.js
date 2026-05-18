@@ -8,7 +8,7 @@ export const createGig = async (req, res)=>{
          return res.status(401).send("Only sellers can create a gig!")
      }
  
-     const newGig = new Gig({userId: req.id, ...req.body})
+     const newGig = new Gig({...req.body, userId: req.id})
      await newGig.save()
 
      try {
