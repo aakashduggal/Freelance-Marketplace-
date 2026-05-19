@@ -1,6 +1,6 @@
 const Home = ()=>{
   return(
-      <section className="bg-slate-900 text-white py-24 lg:py-32 relative overflow-hidden">
+      <section className="bg-slate-900 text-white py-24 lg:py-32 relative overflow-hidden min-h-[calc(100vh-80px)] flex flex-col justify-center">
         {/*1. Main Wrapper */}
 
         {/*2. Inner Container - Grid */}
