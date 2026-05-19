@@ -13,6 +13,8 @@ import Messages from "./pages/Messages"
 import Message from "./pages/Message"
 import MyGigs from "./pages/MyGigs"
 import Orders from "./pages/Orders"
+import Dashboard from "./pages/Dashboard"
+import Profile from "./pages/Profile"
 
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
       <Route path="/messages" element={ <RequireAuth> <Messages/> </RequireAuth>}/>
       <Route path="/message/:id" element={ <RequireAuth> <Message/> </RequireAuth>}/>
       <Route path="/orders" element={ <RequireAuth> <Orders/> </RequireAuth>}/>
+      <Route path="/dashboard" element={ <RequireAuth> <Dashboard/> </RequireAuth>}/>
+      <Route path="/profile" element={ <RequireAuth> <Profile/> </RequireAuth>}/>
       
     </Routes>
     </BrowserRouter>
