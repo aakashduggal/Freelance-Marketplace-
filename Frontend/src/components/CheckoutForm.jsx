@@ -57,8 +57,8 @@ export default function CheckoutForm() {
       const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          // Make sure to change this to your Node.js server endpoint
-          return_url: "https://freelance-marketplace-c0gx.onrender.com/success",
+          // Changed from backend URL to frontend URL so React Router can handle the success page
+          return_url: `${window.location.origin}/success`,
         },
       });
 

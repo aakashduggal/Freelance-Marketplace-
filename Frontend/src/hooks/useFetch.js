@@ -1,48 +1,53 @@
 import { useState, useCallback } from "react";
 
-const useFetch = ()=>{
+const useFetch = () => {
 
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
-const sendRequest = useCallback(async (url, options)=>{
+  const sendRequest = useCallback(async (url, options) => {
 
-  setLoading(true)
-  setError(null)
+    setLoading(true)
+    setError(null)
 
-  try {
-    const finalOptions = {
+    try {
+      const token = localStorage.getItem("token");
+      const finalOptions = {
         ...options,
-        credentials: "include"
-    };
-    const response = await fetch(url, finalOptions)
-    
-    // Check if the response is JSON or Plain Text
-    const contentType = response.headers.get("content-type");
-    let data;
-    if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
-    } else {
-        data = await response.text();
-    }
+        credentials: "include",
+        headers: {
+          ...options?.headers,
+          ...(token && { Authorization: `Bearer ${token}` })
+        }
+      };
+      const response = await fetch(url, finalOptions)
 
-    if(!response.ok){
+      // Check if the response is JSON or Plain Text
+      const contentType = response.headers.get("content-type");
+      let data;
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        data = await response.text();
+      }
+
+      if (!response.ok) {
         // If it's a JSON error, it might have data.message. If it's text, it's just data.
         throw new Error(data.message || data || "Failed to Fetch Data")
+      }
+
+      setLoading(false)
+      return data
+
+    } catch (error) {
+      setLoading(false)
+      setError(error.message)
+
+      throw error
     }
+  }, [])
 
-    setLoading(false)
-    return data
-
-  } catch (error) {
-    setLoading(false)
-    setError(error.message)
-
-    throw error
-  }
-}, [])
-
-  return {loading, error, sendRequest}
+  return { loading, error, sendRequest }
 }
 
 export default useFetch

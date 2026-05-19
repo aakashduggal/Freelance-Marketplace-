@@ -17,58 +17,58 @@ export const register = async (req, res) => {
     return res.status(400).send('password is required')
   }
 
- try {
-     const finduser = await user.findOne({username})
-   
-     if (finduser) {
-       return res.status(400).send("User already exists")
-     }
-   
-     const hashedPassword = bcrypt.hashSync(password, 10)
-   
-     const User = new user({
-       username,
-       email,
-       password: hashedPassword,
-       isSeller
-     })
-   
-     await User.save()
-   
+  try {
+    const finduser = await user.findOne({ username })
+
+    if (finduser) {
+      return res.status(400).send("User already exists")
+    }
+
+    const hashedPassword = bcrypt.hashSync(password, 10)
+
+    const User = new user({
+      username,
+      email,
+      password: hashedPassword,
+      isSeller
+    })
+
+    await User.save()
+
     return res.status(200).send("User has been Created successfully")
- } catch (error) {
+  } catch (error) {
     console.log(error)
-    return res.status(500).send({message: "Internal Server Error", error: error.message})
+    return res.status(500).send({ message: "Internal Server Error", error: error.message })
   }
 
 }
 
-export const login = async (req, res)=>{
-const {username, password} = req.body
+export const login = async (req, res) => {
+  const { username, password } = req.body
 
-try {
-  const findUser = await user.findOne({username})
-  if(!findUser){
-    return res.status(400).send("Authenticate first before login")
-  }
-  
-  const correctPassword = bcrypt.compareSync(password, findUser.password)
-  if(!correctPassword){
-    return res.status(400).send("Please enter correct credentials")
-  }
-  
-  const Token = jwt.sign({id: findUser._id, isSeller: findUser.isSeller}, process.env.JWT_KEY)
+  try {
+    const findUser = await user.findOne({ username })
+    if (!findUser) {
+      return res.status(400).send("Authenticate first before login")
+    }
 
-  const {password: dbPassword, ...finalUser} = findUser._doc
-  
-  res.cookie("accessToken", Token, {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true
-  }).status(200).send({finalUser})
-} catch (error) {
-  console.log(error)
- return res.status(500).send({message: "Internal Server Error", error: error.message})
+    const correctPassword = bcrypt.compareSync(password, findUser.password)
+    if (!correctPassword) {
+      return res.status(400).send("Please enter correct credentials")
+    }
+
+    const Token = jwt.sign({ id: findUser._id, isSeller: findUser.isSeller }, process.env.JWT_KEY)
+
+    const { password: dbPassword, ...finalUser } = findUser._doc
+
+    res.cookie("accessToken", Token, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true
+    }).status(200).send({ finalUser, token: Token })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send({ message: "Internal Server Error", error: error.message })
   }
 
 }
