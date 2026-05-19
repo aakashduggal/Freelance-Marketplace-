@@ -9,7 +9,7 @@ const GigDetail = () => {
 
     const navigate = useNavigate()
 
-    const currentUser = useSelector((state) => state.user)
+    const { currentUser } = useSelector((state) => state.user)
 
     const { id } = useParams();
 
@@ -47,7 +47,12 @@ const GigDetail = () => {
             const data = await sendRequest("https://freelance-marketplace-c0gx.onrender.com/api/conversation", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ to: gig.userId })
+                body: JSON.stringify({ 
+                    to: gig.userId,
+                    sellerId: sellerId,
+                    buyerId: buyerId,
+                    id: conversationId
+                })
             })
 
             navigate(`/message/${data.id}`)

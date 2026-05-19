@@ -33,7 +33,8 @@ const Message = ()=>{
             })
             setConvoDetail(singleConvo)
 
-            const otherUserObj = currentUser.isSeller ? singleConvo.buyerId : singleConvo.sellerId
+            const isCurrentUserSeller = singleConvo.sellerId._id === currentUser._id;
+            const otherUserObj = isCurrentUserSeller ? singleConvo.buyerId : singleConvo.sellerId;
             setOtherUser(otherUserObj)
         } catch (error) {
             console.log(error)
@@ -96,13 +97,10 @@ const Message = ()=>{
             setDesc("")
             setMessages((prev)=> [...prev, res])
             
-            // fetching id of message receiver
-            const receiverId = currentUser.isSeller ? id.substring(24) : id.substring(0, 24)
-
             // telling socket to send the message to receiver
             socket?.emit("sendMessage", {
               senderId : currentUser._id,
-              receiverId: receiverId,
+              receiverId: otherUser?._id,
               desc: desc 
             })
 

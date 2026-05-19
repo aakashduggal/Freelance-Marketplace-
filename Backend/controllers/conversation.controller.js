@@ -2,13 +2,23 @@ import Conversation from "../Models/conversation.model.js"
 
 export const createConversation = async (req, res) => {
   try {
-    const newConversation = new Conversation({
-      id: req.isSeller ? req.id + req.body.to : req.body.to + req.id,
-      sellerId: req.isSeller ? req.id : req.body.to,
-      buyerId: req.isSeller ? req.body.to : req.id,
+    let sellerId = req.body.sellerId;
+    let buyerId = req.body.buyerId;
 
-      readBySeller: req.isSeller,
-      readByBuyer: !req.isSeller
+    if (!sellerId || !buyerId) {
+        sellerId = req.isSeller ? req.id : req.body.to;
+        buyerId = req.isSeller ? req.body.to : req.id;
+    }
+
+    const conversationId = req.body.id || (sellerId + buyerId);
+
+    const newConversation = new Conversation({
+      id: conversationId,
+      sellerId: sellerId,
+      buyerId: buyerId,
+
+      readBySeller: req.id === sellerId,
+      readByBuyer: req.id === buyerId
     })
 
     const convo = await newConversation.save()
