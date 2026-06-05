@@ -1,15 +1,18 @@
 import { useEffect, useState, useMemo } from "react"
+import { useSearchParams } from "react-router-dom"
 import useFetch from "../hooks/useFetch"
 import GigCard from "../components/GigCard"
 import SkeletonCard from "../components/SkeletonCard"
 
-
-
-
 const Gigs = () => {
     const { loading, error, sendRequest } = useFetch()
     const [gig, setGig] = useState([])
-    const [searchQuery, setSearchQuery] = useState("")
+    const [searchParams, setSearchParams] = useSearchParams()
+    
+    const search = searchParams.get("search") || ""
+    const cat = searchParams.get("cat") || ""
+
+    const [searchQuery, setSearchQuery] = useState(search)
     const [sortOrder, setSortOrder] = useState("")
 
     const filteredAndSortedGigs = useMemo(() => {
@@ -26,31 +29,53 @@ const Gigs = () => {
         return processedGigs
     }, [gig, searchQuery, sortOrder])
 
+    // Reset local input when URL param changes and fetch new results
     useEffect(() => {
+        setSearchQuery(search)
+        
         const fetchGigs = async () => {
             try {
-                const data = await sendRequest("https://freelance-marketplace-c0gx.onrender.com/api/gigs/getGigs", {
-                    method: "GET"
-                })
+                const queryParams = new URLSearchParams()
+                if (search) queryParams.append("search", search)
+                if (cat) queryParams.append("cat", cat)
 
+                const data = await sendRequest(
+                    `https://freelance-marketplace-c0gx.onrender.com/api/gigs/getGigs?${queryParams.toString()}`, 
+                    { method: "GET" }
+                )
                 setGig(data)
             } catch (error) {
                 console.log(error)
             }
         }
         fetchGigs()
-    }, [])
+    }, [search, cat])
+
+    const handleSearchSubmit = (e) => {
+        if (e.key === "Enter") {
+            const newParams = {}
+            if (searchQuery.trim()) {
+                newParams.search = searchQuery.trim()
+            }
+            if (cat) {
+                newParams.cat = cat
+            }
+            setSearchParams(newParams)
+        }
+    }
+
     return (
         <div>
 
             {/* Filters Section */}
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-4">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-4 px-4 max-w-7xl mx-auto">
                 {/* Search Box */}
                 <input
                     type="text"
-                    placeholder="Search gigs..."
+                    placeholder="Search gigs... (Press Enter to search all)"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleSearchSubmit}
                     className="px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/3 focus:ring-2 focus:ring-indigo-500 outline-none"
                 />
 
