@@ -77,21 +77,26 @@ export const getGigs = async (req, res)=>{
         filters.price = {$gte: req.query.min || 0, $lte: req.query.max || 100000000 }
         
         if(req.query.search){
-        const result = await elesticClient.search({
-            index: 'gigs',
-            body:{
-                query:{
-                    match:{
-                        title:{
-                            query: req.query.search,
-                            fuzziness: "AUTO"
+            try {
+                const result = await elesticClient.search({
+                    index: 'gigs',
+                    body:{
+                        query:{
+                            match:{
+                                title:{
+                                    query: req.query.search,
+                                    fuzziness: "AUTO"
+                                }
+                            }
                         }
                     }
-                }
+                })
+                const elesticGigs = result.body.hits.hits.map(hit => hit._source)
+                return res.status(200).send(elesticGigs)
+            } catch (esError) {
+                console.warn("ElasticSearch search failed, falling back to MongoDB search. Error:", esError.message)
+                filters.title = { $regex: req.query.search, $options: "i" }
             }
-        })
-        const elesticGigs = result.body.hits.hits.map(hit => hit._source)
-        return res.status(200).send(elesticGigs)
         }
 
         const gigs = await Gig.find(filters) 
